@@ -13,6 +13,18 @@ class MenuItem
   def to_html
     "<li>#{@name} - $#{@price} | #{@calories} | #{@protein} </li>"
   end
+
+  def get_nutritional_info
+    menu_url = 'http://www.tacobell.com/nutrition/information'
+    @@page ||= Nokogiri::HTML(open(menu_url))
+    @@page.css('table#nutrInfo tr').each do |el|
+      if el.css('th').text == @name
+        @calories = el.css('td:eq(2)').text
+        @protein =  el.css('td:eq(12)').text
+        return
+      end
+    end
+  end
 end
 
 def taco_bell
@@ -27,7 +39,9 @@ def taco_bell
     end
     name = el.css('.column-1').text
     price = el.css('.column-3').text[1..-1].to_f
-    menu << MenuItem.new(name, price)
+    mi = MenuItem.new(name, price)
+    mi.get_nutritional_info
+    menu << mi
   end
   menu
 end
@@ -35,6 +49,7 @@ end
 get '/' do
   menu = taco_bell
   body = '<h1>Taco Bell</h1>''<ul>'
+  body << '<li> NAME - PRICE | CALORIES | PROTEIN</li>'
   menu.each { |item| body << item.to_html }
   body << '</ul>'
 end
