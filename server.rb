@@ -18,13 +18,9 @@ def taco_bell
   menu
 end
 
-get '/hello' do
-  "world"
-end
-
 get '/' do
   menu = taco_bell
-  body = '<ul>'
+  body = '<h1>Taco Bell</h1>''<ul>'
   menu.each { |item, price| body << "<li>#{item} $#{price}</li>" }
   body << '</ul>'
 end
