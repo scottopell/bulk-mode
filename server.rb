@@ -43,7 +43,7 @@ class TacoBell
       populate_menu
     end
 
-    sorted = @menu.select{ |mi| !mi.calories.nil? }.sort_by{ |mi| mi.calories }.reverse
+    sorted = @menu.select{ |mi| !mi.send(criteria).nil? }.sort_by{ |mi| mi.send(criteria) }.reverse
 
     sorted.each do |mi|
       while (running_total + mi.price) < wallet do
@@ -96,14 +96,16 @@ get '/' do
 end
 
 get '/best_for' do
-  wallet_amount = params[:wallet].to_f
+  wallet_amount     = params[:wallet].to_f
+  wallet_amount_str = sprintf "%01.2f", wallet_amount
+  criteria          = (params[:criteria] || 'calories').to_sym
 
   body = '<h1>Taco Bell</h1>'
-  body << "<h3>Best for #{wallet_amount}</h3>"
+  body << "<h3>Best for $#{wallet_amount_str}</h3>"
   body << '<table>'
   body << '<thead><td>NAME</td><td>PRICE</td><td>CALORIES</td><td>PROTEIN</td></thead>'
   body << '<tbody>'
-  TacoBell.best_for(wallet_amount).each { |item| body << item.to_html }
+  TacoBell.best_for(wallet_amount, criteria).each { |item| body << item.to_html }
   body << '</tbody>'
   body << '</table>'
 end
