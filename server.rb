@@ -110,6 +110,28 @@ get '/best_for' do
   body << '</table>'
 end
 
+post '/' do
+  data = params['Body'].split ' '
+  puts data
+  wallet_amount     = data[0].to_f
+  criteria          = (data[1] || 'calories').to_sym
+
+  best_items = 'You should buy '
+  items = TacoBell.best_for(wallet_amount, criteria)
+  connector = ' AND '
+  items.each_with_index do |item, i|
+    if i == items.length - 1
+      connector = ''
+    end
+    best_items << item.name + connector
+  end
+
+  "<?xml version='1.0' encoding='UTF-8' ?>
+  <Response>
+    <Message>#{best_items}</Message>
+  </Response>"
+end
+
 get '/favicon.ico' do
   File.read('favicon.ico')
 end
