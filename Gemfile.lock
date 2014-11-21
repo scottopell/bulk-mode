@@ -1,7 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    RubyInline (3.12.3)
+      ZenTest (~> 4.3)
+    ZenTest (4.11.0)
     coderay (1.1.0)
+    fuzzy-string-match (0.9.7)
+      RubyInline (>= 3.8.6)
     method_source (0.8.2)
     mini_portile (0.6.1)
     nokogiri (1.6.4.1)
@@ -24,6 +29,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  fuzzy-string-match
   nokogiri
   pry
   sinatra

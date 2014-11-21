@@ -5,5 +5,6 @@ require 'singleton'
 
 gem 'sinatra'
 gem 'nokogiri'
+gem 'fuzzy-string-match', require: 'fuzzystringmatch'
 
 gem 'pry', group: :development

@@ -50,9 +50,10 @@ class MenuItem
 
   def get_nutritional_info
     menu_url = 'http://www.tacobell.com/nutrition/information'
+    @@jarow = FuzzyStringMatch::JaroWinkler.create( :native )
     @@page ||= Nokogiri::HTML(open(menu_url))
     @@page.css('table#nutrInfo tr').each do |el|
-      if el.css('th').text == @name
+      if @@jarow.getDistance(el.css('th').text, @name) >= 0.8
         @calories = el.css('td:eq(2)').text
         @protein =  el.css('td:eq(12)').text
         return
